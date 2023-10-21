@@ -9,15 +9,19 @@ public class DialogueTrigger : MonoBehaviour
     private AudioSource audioSource;
     private int currentLine = 0;
     private bool playerInTrigger = false;
+    private GameObject inputText;
 
     private void Start()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         GetComponent<Collider>().isTrigger = true;  // Ensure the attached Collider is set as a trigger.
+        inputText = transform.GetChild(0).gameObject;
     }
 
     private void Update()
     {
+        InputTextDisplay();
+
         // Listen for the Dialogue input action
         if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame) // Replace "Key.Dialogue" with the actual key binding you've set in the new Input System.
         {
@@ -35,6 +39,18 @@ public class DialogueTrigger : MonoBehaviour
             {
                 currentLine++;
             }
+        }
+    }
+
+    private void InputTextDisplay()
+    {
+        if (playerInTrigger)
+        {
+            inputText.SetActive(true);
+        }
+        else
+        {
+            inputText.SetActive(false);
         }
     }
 
