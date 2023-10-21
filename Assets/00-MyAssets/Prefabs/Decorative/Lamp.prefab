@@ -45,16 +45,16 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 0.9158236, b: 0.5613208, a: 1}
-  m_Intensity: 10
-  m_Range: 10
-  m_SpotAngle: 100
-  m_InnerSpotAngle: 21.80208
+  m_Intensity: 2.5
+  m_Range: 24
+  m_SpotAngle: 65
+  m_InnerSpotAngle: 6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.617
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -116,7 +116,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 25
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class LightFlicker : MonoBehaviour
 {
     public float minIntensityMultiplier = 0.2f;
-    public float maxIntensityMultiplier = 1.2f;
+    public float maxIntensityMultiplier = 0.9f;
     public float flickerSpeed = 0.25f;
     public float minPauseTime = 0.3f;
     public float maxPauseTime = 1f;

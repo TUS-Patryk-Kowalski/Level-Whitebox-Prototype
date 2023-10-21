@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class DialogueTrigger : MonoBehaviour
 {
     public AudioClip[] voiceLines;
+    public bool requiresInput;
     private AudioSource audioSource;
     private int currentLine = 0;
     private bool playerInTrigger = false;
@@ -13,9 +14,25 @@ public class DialogueTrigger : MonoBehaviour
 
     private void Start()
     {
+        // Ensure the attached Collider is set as a trigger.
+        Collider[] colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            // Check if the collider is a MeshCollider and if it's not set as concave
+            MeshCollider meshCollider = collider as MeshCollider;
+            if (meshCollider != null && !meshCollider.convex)
+            {
+                continue; // Skip this collider
+            }
+
+            // Set the isTrigger property to true for all other colliders
+            collider.isTrigger = true;
+        }
+
         audioSource = gameObject.AddComponent<AudioSource>();
-        GetComponent<Collider>().isTrigger = true;  // Ensure the attached Collider is set as a trigger.
-        inputText = transform.GetChild(0).gameObject;
+
+        if(requiresInput)
+            inputText = transform.GetChild(0).gameObject;
     }
 
     private void Update()
@@ -23,7 +40,11 @@ public class DialogueTrigger : MonoBehaviour
         InputTextDisplay();
 
         // Listen for the Dialogue input action
-        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame) // Replace "Key.Dialogue" with the actual key binding you've set in the new Input System.
+        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput) // Replace "Key.Dialogue" with the actual key binding you've set in the new Input System.
+        {
+            PlayNextVoiceLine();
+        }
+        else if (playerInTrigger && !audioSource.isPlaying && !requiresInput)
         {
             PlayNextVoiceLine();
         }
@@ -39,16 +60,20 @@ public class DialogueTrigger : MonoBehaviour
             {
                 currentLine++;
             }
+            else
+            {
+                this.enabled = false;
+            }
         }
     }
 
     private void InputTextDisplay()
     {
-        if (playerInTrigger)
+        if (playerInTrigger && inputText)
         {
             inputText.SetActive(true);
         }
-        else
+        else if(inputText)
         {
             inputText.SetActive(false);
         }
