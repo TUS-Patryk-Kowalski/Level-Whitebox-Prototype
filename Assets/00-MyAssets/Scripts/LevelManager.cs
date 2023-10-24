@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;  // Needed for IEnumerator
 
 [Serializable]
 public class LevelDetail
@@ -10,6 +11,7 @@ public class LevelDetail
     public LevelCollisionChecker nextLevel;
     public GameObject previousLevelGO;
     public Transform playerSpawn;
+    public int setLevelTo;
 }
 
 public class LevelManager : MonoBehaviour
@@ -20,10 +22,13 @@ public class LevelManager : MonoBehaviour
 
     private GameObject playerGO;
 
+    // Cooldown mechanism variables
+    private bool canTransition = true;
+    private float cooldownTime = 2.0f; // 2 seconds as an example
+
     private void Start()
     {
         playerGO = GameObject.FindWithTag("Player");
-        UpdateActiveLevel();
     }
 
     private void Update()
@@ -35,7 +40,7 @@ public class LevelManager : MonoBehaviour
             // Make UI Image transparent over time
             sceneTransition.color = new Color(sceneTransition.color.r, sceneTransition.color.g, sceneTransition.color.b, Mathf.Clamp01(sceneTransition.color.a - detail.transitionSpeed * Time.deltaTime));
         }
-        else
+        else if (canTransition)  // Only proceed with the transition if cooldown allows it
         {
             // Make UI Image opaque over time
             sceneTransition.color = new Color(sceneTransition.color.r, sceneTransition.color.g, sceneTransition.color.b, Mathf.Clamp01(sceneTransition.color.a + detail.transitionSpeed * Time.deltaTime));
@@ -44,21 +49,26 @@ public class LevelManager : MonoBehaviour
             if (sceneTransition.color.a >= 1.0f)
             {
                 playerGO.SetActive(false);
-                playerGO.transform.position = detail.playerSpawn.position;
+                playerGO.transform.position = detail.playerSpawn.localPosition;
                 playerGO.SetActive(true);
 
+                currentLevel = detail.setLevelTo;
                 detail.previousLevelGO.SetActive(false);
                 detail.nextLevelGO.SetActive(true);
-                
-                currentLevel++;
-                UpdateActiveLevel();
+
+                detail.nextLevel.inTrigger = false;
+
+                // Start the transition cooldown
+                canTransition = false;
+                StartCoroutine(TransitionCooldown());
             }
         }
     }
 
-    void UpdateActiveLevel()
+    // Cooldown coroutine
+    IEnumerator TransitionCooldown()
     {
-        // Ensure currentLevel stays within bounds
-        currentLevel = Mathf.Clamp(currentLevel, 0, levelDetails.Length - 1);
+        yield return new WaitForSeconds(cooldownTime);
+        canTransition = true;
     }
 }
