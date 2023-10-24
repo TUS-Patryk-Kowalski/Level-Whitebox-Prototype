@@ -43,6 +43,9 @@ public class DialogueTrigger : MonoBehaviour
         if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput) // Replace "Key.Dialogue" with the actual key binding you've set in the new Input System.
         {
             PlayNextVoiceLine();
+
+            if (!requiresInput)
+                this.enabled = false;
         }
         else if (playerInTrigger && !audioSource.isPlaying && !requiresInput)
         {
