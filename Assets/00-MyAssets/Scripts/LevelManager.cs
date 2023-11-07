@@ -16,59 +16,63 @@ public class LevelDetail
 
 public class LevelManager : MonoBehaviour
 {
-    public RawImage sceneTransition;  // The shared RawImage for all levels
+    public RawImage sceneTransition;
     public int currentLevel = 0;
     public LevelDetail[] levelDetails;
 
     private GameObject playerGO;
 
-    // Cooldown mechanism variables
-    private bool canTransition = true;
-    private float cooldownTime = 2.0f; // 2 seconds as an example
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
 
     private void Start()
     {
-        playerGO = GameObject.FindWithTag("Player");
+        GrabStartingReferences();
     }
 
     private void Update()
+    {
+        ScreenFadeWithTeleport();
+    }
+
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void GrabStartingReferences()
+    {
+        playerGO = GameObject.FindWithTag("Player");
+    }
+    private void ScreenFadeWithTeleport()
     {
         LevelDetail detail = levelDetails[currentLevel];
 
         if (!detail.nextLevel.inTrigger)
         {
-            // Make UI Image transparent over time
             sceneTransition.color = new Color(sceneTransition.color.r, sceneTransition.color.g, sceneTransition.color.b, Mathf.Clamp01(sceneTransition.color.a - detail.transitionSpeed * Time.deltaTime));
         }
-        else if (canTransition)  // Only proceed with the transition if cooldown allows it
+        else
         {
-            // Make UI Image opaque over time
             sceneTransition.color = new Color(sceneTransition.color.r, sceneTransition.color.g, sceneTransition.color.b, Mathf.Clamp01(sceneTransition.color.a + detail.transitionSpeed * Time.deltaTime));
 
-            // Load next level, Unload current level
             if (sceneTransition.color.a >= 1.0f)
             {
-                playerGO.SetActive(false);
-                playerGO.transform.position = detail.playerSpawn.localPosition;
-                playerGO.SetActive(true);
-
-                currentLevel = detail.setLevelTo;
-                detail.previousLevelGO.SetActive(false);
-                detail.nextLevelGO.SetActive(true);
-
-                detail.nextLevel.inTrigger = false;
-
-                // Start the transition cooldown
-                canTransition = false;
-                StartCoroutine(TransitionCooldown());
+                Teleport(detail);
             }
         }
     }
 
-    // Cooldown coroutine
-    IEnumerator TransitionCooldown()
+    private void Teleport(LevelDetail detailsForTeleport)
     {
-        yield return new WaitForSeconds(cooldownTime);
-        canTransition = true;
+        playerGO.SetActive(false);
+        playerGO.transform.position = detailsForTeleport.playerSpawn.localPosition;
+        playerGO.SetActive(true);
+
+        currentLevel = detailsForTeleport.setLevelTo;
+        detailsForTeleport.previousLevelGO.SetActive(false);
+        detailsForTeleport.nextLevelGO.SetActive(true);
+
+        detailsForTeleport.nextLevel.inTrigger = false;
     }
 }

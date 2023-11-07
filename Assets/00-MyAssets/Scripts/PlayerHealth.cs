@@ -19,7 +19,25 @@ public class PlayerHealth : MonoBehaviour
 
     private Coroutine healthBarCoroutine;
 
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
+
     private void Start()
+    {
+        StartupActions();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateHealthUI();
+    }
+
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void StartupActions()
     {
         hurt = this.AddComponent<AudioSource>();
         hurt.playOnAwake = false;
@@ -27,9 +45,11 @@ public class PlayerHealth : MonoBehaviour
         InitializeHealthUI();
     }
 
-    private void FixedUpdate()
+    // Update the health UI when the player takes damage.
+    private void UpdateHealthUI()
     {
-        UpdateHealthUI();
+        healthSlider.value = currentHealth;
+        healthNumber.text = currentHealth.ToString();
     }
 
     private void InitializeHealthUI()
@@ -74,12 +94,5 @@ public class PlayerHealth : MonoBehaviour
 
         // Directly set the health slider value to the current health to avoid any floating-point errors.
         healthSlider.value = currentHealth;
-    }
-
-    // Call this method to update the health UI when the player takes damage.
-    private void UpdateHealthUI()
-    {
-        healthSlider.value = currentHealth;
-        healthNumber.text = currentHealth.ToString();
     }
 }

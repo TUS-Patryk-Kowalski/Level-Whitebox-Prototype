@@ -6,13 +6,38 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    //Game manager reference
     public static GameManager instance;
 
+    //Flashlight variables
     public bool hasFlashlight;
     public Flashlight flashlight;
     public TextMeshProUGUI useFlashlight;
 
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
+
     private void Awake()
+    {
+        CreateSingletonPattern();
+    }
+
+    private void FixedUpdate()
+    {
+        FlashlightUseUIText();
+    }
+
+    private void Update()
+    {
+        ToggleFlashlight();
+    }
+
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void CreateSingletonPattern()
     {
         if (instance == null)
         {
@@ -24,14 +49,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void FlashlightUseUIText()
     {
         if (hasFlashlight)
         {
             useFlashlight.text = "F for Flashlight";
         }
     }
-    private void Update()
+
+    private void ToggleFlashlight()
     {
         if (hasFlashlight && Keyboard.current.fKey.wasPressedThisFrame)
         {

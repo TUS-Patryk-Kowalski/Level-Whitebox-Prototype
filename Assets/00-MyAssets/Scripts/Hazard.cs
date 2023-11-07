@@ -5,13 +5,17 @@ public class HazardDamage : MonoBehaviour
 {
     public int damagePerSecond = 5;
 
-    private Coroutine damageCoroutine; // A reference to the running coroutine
+    private Coroutine damageCoroutine;
+
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            damageCoroutine = StartCoroutine(DamagePlayerOverTime(other.gameObject)); // Start and store the coroutine
+            StartCoroutine(other);
         }
     }
 
@@ -19,10 +23,13 @@ public class HazardDamage : MonoBehaviour
     {
         if (other.CompareTag("Player") && damageCoroutine != null)
         {
-            StopCoroutine(damageCoroutine); // Stop the referenced coroutine
-            damageCoroutine = null; // Clear the reference
+            StopCoroutine();
         }
     }
+
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
 
     IEnumerator DamagePlayerOverTime(GameObject player)
     {
@@ -34,5 +41,16 @@ public class HazardDamage : MonoBehaviour
             playerHealth.TakeDamage(damagePerSecond);
             yield return new WaitForSeconds(1); // Wait for 1 second before dealing damage again
         }
+    }
+
+    private void StartCoroutine(Collider info)
+    {
+        damageCoroutine = StartCoroutine(DamagePlayerOverTime(info.gameObject));
+    }
+
+    private void StopCoroutine()
+    {
+        StopCoroutine(damageCoroutine); // Stop the referenced coroutine
+        damageCoroutine = null; // Clear the reference
     }
 }

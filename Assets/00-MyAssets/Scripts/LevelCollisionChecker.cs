@@ -6,11 +6,15 @@ public class LevelCollisionChecker : MonoBehaviour
 {
     public bool inTrigger;
 
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
+
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            inTrigger = true;
+            SetTriggerStateTo(true);
         }
     }
 
@@ -18,7 +22,16 @@ public class LevelCollisionChecker : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            inTrigger = false;
+            SetTriggerStateTo(false);
         }
+    }
+
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void SetTriggerStateTo(bool status)
+    {
+        inTrigger |= status;
     }
 }

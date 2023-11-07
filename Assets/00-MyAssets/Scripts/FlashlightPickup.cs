@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Using the new Unity Input System
+using UnityEngine.InputSystem;
 
 public class FlashlightPickup : MonoBehaviour
 {
-    public GameManager gameManager; // Reference to the GameManager which holds the flashlight status
+    public GameManager gameManager;
 
     private bool isPlayerInTrigger = false;
     public GameObject voicelineSource;
@@ -12,32 +12,18 @@ public class FlashlightPickup : MonoBehaviour
 
     private float time;
 
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
+
     private void Start()
     {
-        gameManager = GameManager.instance;
-        playerVoiceline = voicelineSource.GetComponent<AudioSource>();
+        GrabStartingReferences();
     }
 
     private void Update()
     {
-        // Check if the player is within the trigger collider and if the 'E' key is pressed
-        if (isPlayerInTrigger && Keyboard.current.eKey.wasPressedThisFrame && !gameManager.hasFlashlight)
-        {
-            PickupFlashlight();
-
-            pickup.Play();
-        }
-
-        if (gameManager.hasFlashlight)
-        {
-            time = time + Time.deltaTime;
-
-            if (time >= playerVoiceline.clip.length)
-            {
-                // Destroy flashlight GameObject or destroy it if it should disappear after pickup
-                Destroy(gameObject);
-            }
-        }
+        HandleFlashlightPickup();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,7 +31,7 @@ public class FlashlightPickup : MonoBehaviour
         // Check if the entering collider is tagged as Player
         if (other.CompareTag("Player"))
         {
-            isPlayerInTrigger = true;
+            SetPlayerCollisionStatus(true);
         }
     }
 
@@ -54,13 +40,50 @@ public class FlashlightPickup : MonoBehaviour
         // Check if the exiting collider is tagged as Player
         if (other.CompareTag("Player"))
         {
-            isPlayerInTrigger = false;
+            SetPlayerCollisionStatus(false);
         }
     }
 
-    private void PickupFlashlight()
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void GrabStartingReferences()
     {
-        // Set hasFlashlight to true to indicate that the flashlight has been picked up
-        gameManager.hasFlashlight = true;
+        gameManager = GameManager.instance;
+        playerVoiceline = voicelineSource.GetComponent<AudioSource>();
+    }
+
+    private void HandleFlashlightPickup()
+    {
+        // Check if the player is within the trigger collider and if the 'E' key is pressed
+        if (isPlayerInTrigger && Keyboard.current.eKey.wasPressedThisFrame && !gameManager.hasFlashlight)
+        {
+            HasFlashlight(true);
+
+            pickup.Play();
+        }
+
+        // Destroy the flashlight object once the player character stops talking
+        if (gameManager.hasFlashlight)
+        {
+            time = time + Time.deltaTime;
+
+            if (playerVoiceline.clip != null && time >= playerVoiceline.clip.length)
+            {
+                // Destroy flashlight GameObject or destroy it if it should disappear after pickup
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private void HasFlashlight(bool state)
+    {
+        gameManager.hasFlashlight = state;
+    }
+
+    private void SetPlayerCollisionStatus(bool status)
+    {
+        isPlayerInTrigger = status;
     }
 }

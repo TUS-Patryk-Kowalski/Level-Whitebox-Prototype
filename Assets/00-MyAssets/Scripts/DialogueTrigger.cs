@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Collider))]
 public class DialogueTrigger : MonoBehaviour
 {
+    // Dialogue variables
     public AudioClip[] voiceLines;
     public bool requiresInput;
     private AudioSource audioSource;
@@ -12,44 +13,60 @@ public class DialogueTrigger : MonoBehaviour
     private bool playerInTrigger = false;
     private GameObject inputText;
 
+    //-----------------------------------------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //-----------------------------------------------------------------------------------
+
     private void Awake()
+    {
+        CreateAudioSource();
+    }
+
+    private void Start()
+    {
+        SetCollidersAsTriggers();
+
+        if (requiresInput)
+            GetInputText();
+
+        InputTextDisplay(); // Most of the text displays will need to be disabled once the game starts
+    }
+
+    private void Update()
+    {
+        HandleDialogue();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            SetPlayerCollisionStateTo(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            SetPlayerCollisionStateTo(false);
+        }
+    }
+
+    //-----------------------------------------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //-----------------------------------------------------------------------------------
+
+    private void CreateAudioSource()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
     }
 
-    private void Start()
+    private void SetPlayerCollisionStateTo(bool newState)
     {
-        Collider[] colliders = GetComponents<Collider>();
-        foreach (var collider in colliders)
-        {
-            MeshCollider meshCollider = collider as MeshCollider;
-            if (meshCollider != null && !meshCollider.convex)
-            {
-                continue;
-            }
-            collider.isTrigger = true;
-        }
-
-        if(requiresInput)
-            inputText = transform.GetChild(0).gameObject;
-    }
-
-    private void Update()
-    {
-        InputTextDisplay();
-
-        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput)
-        {
-            PlayNextVoiceLine();
-
-            if (!requiresInput)
-                this.enabled = false;
-        }
-        else if (playerInTrigger && !audioSource.isPlaying && !requiresInput)
-        {
-            PlayNextVoiceLine();
-        }
+        playerInTrigger = newState;
+        InputTextDisplay(); // Recheck if the text should be displayed
     }
 
     private void PlayNextVoiceLine()
@@ -58,7 +75,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             audioSource.clip = voiceLines[currentLine];
             audioSource.Play();
-            if(currentLine < voiceLines.Length - 1)
+            if (currentLine < voiceLines.Length - 1)
             {
                 currentLine++;
             }
@@ -75,25 +92,44 @@ public class DialogueTrigger : MonoBehaviour
         {
             inputText.SetActive(true);
         }
-        else if(inputText)
+        else if (inputText)
         {
             inputText.SetActive(false);
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void SetCollidersAsTriggers()
     {
-        if (other.CompareTag("Player")) // Make sure your player has the tag "Player".
+        Collider[] colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
         {
-            playerInTrigger = true;
+            MeshCollider meshCollider = collider as MeshCollider;
+            if (meshCollider != null && !meshCollider.convex)
+            {
+                continue;
+            }
+            collider.isTrigger = true;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void GetInputText()
     {
-        if (other.CompareTag("Player"))
+        // The text mesh component should always be on the first child object of this script's object
+        inputText = transform.GetChild(0).gameObject;
+    }
+
+    private void HandleDialogue()
+    {
+        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput)
         {
-            playerInTrigger = false;
+            PlayNextVoiceLine();
+
+            if (!requiresInput)
+                this.enabled = false;
+        }
+        else if (playerInTrigger && !audioSource.isPlaying && !requiresInput)
+        {
+            PlayNextVoiceLine();
         }
     }
 }

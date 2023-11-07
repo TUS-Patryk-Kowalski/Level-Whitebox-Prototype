@@ -15,17 +15,34 @@ public class LightFlicker : MonoBehaviour
     private AudioSource audioSource;
     private float originalIntensity;
 
-    void Start()
-    {
-        flickerLight = GetComponentInChildren<Light>();
-        audioSource = GetComponentInChildren<AudioSource>();
+    //---------------------------------------------------
+    // CORE UNITY FUNCTIONS
+    //---------------------------------------------------
 
-        originalIntensity = flickerLight.intensity;
+    private void Start()
+    {
+        GrabStartingVariables();
+        SetStartingVariables();
 
         StartCoroutine(FlickerLightRoutine());
     }
 
-    IEnumerator FlickerLightRoutine()
+    //---------------------------------------------------
+    // CUSTOM FUNCTIONS
+    //---------------------------------------------------
+
+    private void GrabStartingVariables()
+    {
+        flickerLight = GetComponentInChildren<Light>();
+        audioSource = GetComponentInChildren<AudioSource>();
+    }
+
+    private void SetStartingVariables()
+    {
+        originalIntensity = flickerLight.intensity;
+    }
+
+    private IEnumerator FlickerLightRoutine()
     {
         while (true)
         {
