@@ -12,24 +12,24 @@ public class DialogueTrigger : MonoBehaviour
     private bool playerInTrigger = false;
     private GameObject inputText;
 
+    private void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+    }
+
     private void Start()
     {
-        // Ensure the attached Collider is set as a trigger.
         Collider[] colliders = GetComponents<Collider>();
         foreach (var collider in colliders)
         {
-            // Check if the collider is a MeshCollider and if it's not set as concave
             MeshCollider meshCollider = collider as MeshCollider;
             if (meshCollider != null && !meshCollider.convex)
             {
-                continue; // Skip this collider
+                continue;
             }
-
-            // Set the isTrigger property to true for all other colliders
             collider.isTrigger = true;
         }
-
-        audioSource = gameObject.AddComponent<AudioSource>();
 
         if(requiresInput)
             inputText = transform.GetChild(0).gameObject;
@@ -39,8 +39,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         InputTextDisplay();
 
-        // Listen for the Dialogue input action
-        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput) // Replace "Key.Dialogue" with the actual key binding you've set in the new Input System.
+        if (playerInTrigger && !audioSource.isPlaying && Keyboard.current[Key.E].wasPressedThisFrame && requiresInput)
         {
             PlayNextVoiceLine();
 

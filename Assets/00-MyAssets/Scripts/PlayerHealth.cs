@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI; // Reference to the UI namespace
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -10,10 +12,17 @@ public class PlayerHealth : MonoBehaviour
     public Slider healthSlider; // Reference to the Slider UI component
     public TextMeshProUGUI healthNumber;
 
+    public List<AudioClip> audioClips = new List<AudioClip>();
+    private int index;
+
+    private AudioSource hurt;
+
     private Coroutine healthBarCoroutine;
 
     private void Start()
     {
+        hurt = this.AddComponent<AudioSource>();
+        hurt.playOnAwake = false;
         currentHealth = maxHealth;
         InitializeHealthUI();
     }
@@ -32,6 +41,11 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        // Select a random index. The second parameter is exclusive, hence audioClips.Count.
+        index = Random.Range(0, audioClips.Count);
+        hurt.clip = audioClips[index];
+        hurt.Play();
+
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
