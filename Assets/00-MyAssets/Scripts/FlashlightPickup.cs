@@ -34,7 +34,7 @@ public class FlashlightPickup : MonoBehaviour
 
             if (time >= playerVoiceline.clip.length)
             {
-                // Destry flashlight GameObject or destroy it if it should disappear after pickup
+                // Destroy flashlight GameObject or destroy it if it should disappear after pickup
                 Destroy(gameObject);
             }
         }
@@ -62,8 +62,5 @@ public class FlashlightPickup : MonoBehaviour
     {
         // Set hasFlashlight to true to indicate that the flashlight has been picked up
         gameManager.hasFlashlight = true;
-
-        // You can add more functionality here, such as playing a pickup sound or animation
-        
     }
 }
