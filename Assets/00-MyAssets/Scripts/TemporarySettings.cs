@@ -11,10 +11,10 @@ public class TemporarySettings : MonoBehaviour
     private float rotation;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
-    void Awake()
+    private void Awake()
     {
         SetFramerate(maxFrameRate);
     }
@@ -25,10 +25,10 @@ public class TemporarySettings : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PUBLIC FUNCTIONS
     //---------------------------------------------------
 
-    private void SetFramerate(int targetFrameRate)
+    public void SetFramerate(int targetFrameRate)
     {
         if (targetFrameRate == 0)
         {

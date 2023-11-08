@@ -14,7 +14,7 @@ public class DialogueTrigger : MonoBehaviour
     private GameObject inputText;
 
     //-----------------------------------------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //-----------------------------------------------------------------------------------
 
     private void Awake()
@@ -28,13 +28,16 @@ public class DialogueTrigger : MonoBehaviour
 
         if (requiresInput)
             GetInputText();
-
-        InputTextDisplay(); // Most of the text displays will need to be disabled once the game starts
     }
 
     private void Update()
     {
         HandleDialogue();
+    }
+
+    private void FixedUpdate()
+    {
+        InputTextDisplay();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -54,7 +57,7 @@ public class DialogueTrigger : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PRIVATE FUNCTIONS
     //-----------------------------------------------------------------------------------
 
     private void CreateAudioSource()
@@ -66,12 +69,11 @@ public class DialogueTrigger : MonoBehaviour
     private void SetPlayerCollisionStateTo(bool newState)
     {
         playerInTrigger = newState;
-        InputTextDisplay(); // Recheck if the text should be displayed
     }
 
     private void PlayNextVoiceLine()
     {
-        if (voiceLines.Length > 0 && currentLine < voiceLines.Length)
+        if (voiceLines.Length > 0)
         {
             audioSource.clip = voiceLines[currentLine];
             audioSource.Play();
@@ -81,6 +83,7 @@ public class DialogueTrigger : MonoBehaviour
             }
             else
             {
+                InputTextDisplay();
                 this.enabled = false;
             }
         }
@@ -88,7 +91,7 @@ public class DialogueTrigger : MonoBehaviour
 
     private void InputTextDisplay()
     {
-        if (playerInTrigger && inputText)
+        if (playerInTrigger && inputText && !audioSource.isPlaying && currentLine < voiceLines.Length)
         {
             inputText.SetActive(true);
         }

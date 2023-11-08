@@ -8,7 +8,7 @@ public class HazardDamage : MonoBehaviour
     private Coroutine damageCoroutine;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
@@ -28,7 +28,7 @@ public class HazardDamage : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     IEnumerator DamagePlayerOverTime(GameObject player)

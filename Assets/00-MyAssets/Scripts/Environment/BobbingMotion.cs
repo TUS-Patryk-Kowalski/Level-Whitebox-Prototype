@@ -10,15 +10,27 @@ public class BobbingMotion : MonoBehaviour
 
     void Start()
     {
-        startPosition = transform.position;
-        randomFrequencyOffset = Random.Range(-0.2f, 0.2f);
+        StartupActions();
     }
 
     void Update()
     {
+        CalculateAndApplyMotions();
+    }
+
+    private void StartupActions()
+    {
+        startPosition = transform.position;
+        randomFrequencyOffset = Random.Range(-0.2f, 0.2f);
+    }
+
+    private void CalculateAndApplyMotions()
+    {
+        // Calculate offset
         Vector3 tempPos = startPosition;
         tempPos.y += Mathf.Sin((Time.fixedTime + randomFrequencyOffset) * Mathf.PI * frequency) * amplitude;
 
+        // Apply offset
         transform.position = tempPos;
     }
 }

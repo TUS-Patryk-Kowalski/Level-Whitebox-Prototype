@@ -20,7 +20,7 @@ public class PlayerHealth : MonoBehaviour
     private Coroutine healthBarCoroutine;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void Start()
@@ -34,7 +34,28 @@ public class PlayerHealth : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PUBLIC FUNCTIONS
+    //---------------------------------------------------
+
+    public void TakeDamage(int amount)
+    {
+        // Select a random index. The second parameter is exclusive, hence audioClips.Count.
+        index = Random.Range(0, audioClips.Count);
+        hurt.clip = audioClips[index];
+        hurt.Play();
+
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        // If there's already a coroutine, stop it before starting a new one
+        if (healthBarCoroutine != null)
+            StopCoroutine(healthBarCoroutine);
+
+        healthBarCoroutine = StartCoroutine(LerpHealthBar());
+    }
+
+    //---------------------------------------------------
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void StartupActions()
@@ -59,24 +80,7 @@ public class PlayerHealth : MonoBehaviour
         healthSlider.value = currentHealth;
     }
 
-    public void TakeDamage(int amount)
-    {
-        // Select a random index. The second parameter is exclusive, hence audioClips.Count.
-        index = Random.Range(0, audioClips.Count);
-        hurt.clip = audioClips[index];
-        hurt.Play();
-
-        currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-        // If there's already a coroutine, stop it before starting a new one
-        if (healthBarCoroutine != null)
-            StopCoroutine(healthBarCoroutine);
-
-        healthBarCoroutine = StartCoroutine(LerpHealthBar());
-    }
-
-    IEnumerator LerpHealthBar()
+    private IEnumerator LerpHealthBar()
     {
         float preChangeHealth = healthSlider.value;
         float elapsed = 0f;

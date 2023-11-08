@@ -13,7 +13,7 @@ public class FlashlightPickup : MonoBehaviour
     private float time;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void Start()
@@ -45,7 +45,7 @@ public class FlashlightPickup : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void GrabStartingReferences()

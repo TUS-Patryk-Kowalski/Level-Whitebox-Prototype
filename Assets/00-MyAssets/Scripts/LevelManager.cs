@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     private GameObject playerGO;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void Start()
@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void GrabStartingReferences()

@@ -16,7 +16,7 @@ public class LightFlicker : MonoBehaviour
     private float originalIntensity;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void Start()
@@ -28,7 +28,11 @@ public class LightFlicker : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PUBLIC FUNCTIONS
+    //---------------------------------------------------
+
+    //---------------------------------------------------
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void GrabStartingVariables()

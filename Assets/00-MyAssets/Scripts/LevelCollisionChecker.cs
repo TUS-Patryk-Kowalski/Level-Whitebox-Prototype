@@ -7,7 +7,7 @@ public class LevelCollisionChecker : MonoBehaviour
     public bool inTrigger;
 
     //---------------------------------------------------
-    // CORE UNITY FUNCTIONS
+    // UNITY FUNCTIONS
     //---------------------------------------------------
 
     private void OnTriggerStay(Collider other)
@@ -27,7 +27,7 @@ public class LevelCollisionChecker : MonoBehaviour
     }
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void SetTriggerStateTo(bool status)

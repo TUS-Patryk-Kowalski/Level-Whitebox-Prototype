@@ -10,7 +10,7 @@ public class Flashlight : MonoBehaviour
     public AudioSource flashlightSound;
 
     //---------------------------------------------------
-    // CUSTOM FUNCTIONS
+    // PUBLIC FUNCTIONS
     //---------------------------------------------------
     public void Toggle()
     {

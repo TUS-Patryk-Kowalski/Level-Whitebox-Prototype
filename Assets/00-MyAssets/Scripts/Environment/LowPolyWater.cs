@@ -12,13 +12,17 @@ public class LowPolyWaves : MonoBehaviour
     private Mesh mesh;
     private Vector3[] baseVertices;
 
-    void Start()
+    //---------------------------------------------------
+    // UNITY FUNCTIONS
+    //---------------------------------------------------
+
+    private void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh;
         baseVertices = mesh.vertices;
     }
 
-    void Update()
+    private void Update()
     {
         Vector3[] vertices = new Vector3[baseVertices.Length];
         float time = Time.time * speed;
