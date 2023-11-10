@@ -29,11 +29,6 @@ public class LevelManager : MonoBehaviour
     // UNITY FUNCTIONS
     //---------------------------------------------------
 
-    private void Awake()
-    {
-        //currentLevel = PlayerPrefs.GetInt("SelectedStartingPoint");
-    }
-
     private void Start()
     {
         GrabStartingReferences();
@@ -48,38 +43,45 @@ public class LevelManager : MonoBehaviour
     }
 
     //---------------------------------------------------
+    // PUBLIC FUNCTIONS
+    //---------------------------------------------------
+
+    public void Teleport(Transform newPosition)
+    {
+        playerGO.SetActive(false);
+        playerGO.transform.position = newPosition.position;
+        playerGO.transform.rotation = newPosition.rotation;
+        playerGO.SetActive(true);
+    }
+
+    //---------------------------------------------------
     // PRIVATE FUNCTIONS
     //---------------------------------------------------
 
     private void StartingTeleport()
     {
+        currentLevel = PlayerPrefs.GetInt("SelectedLevel");
+        StartingID = PlayerPrefs.GetInt("SelectedStartingPoint");
+
         StartingPoints startingPoints = levelDetails[currentLevel].currentLevelGO.GetComponent<StartingPoints>();
 
         foreach (SPData startData in startingPoints.startingPointArray)
         {
             if (currentLevel != startData.startingPointLevel || StartingID != startData.startingPointID)
             {
-                // Not the right level, move on
                 continue;
             }
             else if(currentLevel == startData.startingPointLevel && StartingID == startData.startingPointID)
             {
                 Debug.Log($"Moving Player to Level {startData.startingPointLevel} at start {startData.startingPointID}");
-                // Move player to starting area
-                playerGO.SetActive(false);
-                playerGO.transform.position = startData.startingPointTransform.position;
-                playerGO.transform.rotation = startData.startingPointTransform.rotation;
-                playerGO.SetActive(true);
-                break;
+                Teleport(startData.startingPointTransform);
+                break; // Found correct point, remain points don't need to be checked
             }
-            else // no mathcing start was found, set it to 1 and teleport the player there
+            else
             {
-                Debug.Log("No points were found, defaulting!");
+                Debug.Log("No points were found, defaulting to the first point!");
                 StartingID = 1;
-
-                playerGO.SetActive(false);
-                playerGO.transform.position = startData.startingPointTransform.position;
-                playerGO.SetActive(true);
+                Teleport(startData.startingPointTransform);
             }
         }
     }

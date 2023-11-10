@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     {
         if (hasFlashlight)
         {
-            useFlashlight.text = "F for Flashlight";
+            useFlashlight.text = "F = Flashlight";
         }
     }
 
