@@ -1,11 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using StarterAssets;
 
 public class HazardDamage : MonoBehaviour
 {
     public int damagePerSecond = 5;
 
+    public bool modifyPlayerSpeed;
+    public float updatedPlayerMoveSpeed;
+    public float updatedPlayerSprintSpeed;
+
     private Coroutine damageCoroutine;
+
+    private FirstPersonController playerController;
+
+    private float originalWalk;
+    private float originalSprint;
 
     //---------------------------------------------------
     // UNITY FUNCTIONS
@@ -13,9 +23,23 @@ public class HazardDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(playerController == null)
+        {
+            playerController = other.GetComponent<FirstPersonController>();
+        }
+
         if (other.CompareTag("Player"))
         {
+            originalWalk = playerController.MoveSpeed;
+            originalSprint = playerController.SprintSpeed;
+
             StartCoroutine(other);
+
+            // Update the player's movement speeds if the hazard is meant to modify them
+            if (modifyPlayerSpeed)
+            {
+                playerController.ModifyPlayerSpeeds(updatedPlayerMoveSpeed, updatedPlayerSprintSpeed);
+            }
         }
     }
 
@@ -23,6 +47,7 @@ public class HazardDamage : MonoBehaviour
     {
         if (other.CompareTag("Player") && damageCoroutine != null)
         {
+            playerController.ModifyPlayerSpeeds(originalWalk, originalSprint);
             StopCoroutine();
         }
     }

@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     //Game manager reference
     public static GameManager instance;
 
+    public GameObject playerGO;
+
     //Flashlight variables
     public bool hasFlashlight;
     public Flashlight flashlight;
@@ -25,6 +27,10 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(playerGO == null)
+        {
+            playerGO = GameObject.FindWithTag("Player");
+        }
         FlashlightUseUIText();
     }
 
