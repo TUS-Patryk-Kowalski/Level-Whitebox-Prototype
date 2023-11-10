@@ -18,13 +18,19 @@ public class ImageChanger : MonoBehaviour
 
     private void Start()
     {
-        imageSequence = CycleImages();
-        StartCoroutine(imageSequence);
-
-        if(timeForImages == 0)
+        if (timeForImages == 0)
         {
             timeForImages = 10;
         }
+    }
+
+    private void OnEnable()
+    {
+        image1.color = new Color(image1.color.r, image1.color.g, image1.color.b, 1);
+        image2.color = new Color(image1.color.r, image1.color.g, image1.color.b, 1);
+
+        imageSequence = CycleImages();
+        StartCoroutine(imageSequence); 
     }
 
     private IEnumerator CycleImages()

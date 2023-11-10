@@ -1,42 +1,39 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ButtonData : MonoBehaviour
 {
-    public GameObject currentView;
-
-    [Header("Leave this variable as null to make the button load a level instead of switching the Menu")]
-    public GameObject nextView;
-
-    public AudioSource audioSource;
+    [Header("Leave as null to load a level instead of switching the Menu")]
     public AudioClip buttonSound;
+    public int sceneIndex, startingPointID, newScreenID;
 
-    public int sceneIndex, startingPointID;
+    private AudioSource audioSource;
 
     private void Start()
     {
-        // SUGGESTION: Try replacing GetChild with something else
-        audioSource = GameObject.FindWithTag("MainCamera").transform.GetChild(0).GetComponent<AudioSource>();
+        audioSource = GameObject.FindWithTag("MainCamera").GetComponentInChildren<AudioSource>();
+        if (audioSource == null)
+            audioSource = GameObject.FindWithTag("MainCamera").AddComponent<AudioSource>();
     }
 
-    public void SwitchViews()
+    public void PlaySound()
     {
-        EnableNextView(currentView, nextView, sceneIndex, startingPointID);
+        if (buttonSound != null)
+        {
+            audioSource.PlayOneShot(buttonSound);
+        }
     }
 
-    private void EnableNextView(GameObject currentView, GameObject nextView, int nextScene, int startingPointID)
+    public void SetNewScreenID()
     {
-        if(nextView == null)
-        {
-            PlayerPrefs.SetInt("SelectedLevel", nextScene);
-            PlayerPrefs.SetInt("SelectedStartingPoint", startingPointID);
+        CanvasInfo.currentScreenID = newScreenID;
+    }
 
-            SceneManager.LoadScene(nextScene);
-        }
-        else
-        {
-            nextView.SetActive(true);
-            currentView.SetActive(false);
-        }
+    public void LoadNewScene()
+    {
+        PlayerPrefs.SetInt("SelectedLevel", sceneIndex);
+        PlayerPrefs.SetInt("SelectedStartingPoint", startingPointID);
+        SceneManager.LoadScene(sceneIndex);
     }
 }

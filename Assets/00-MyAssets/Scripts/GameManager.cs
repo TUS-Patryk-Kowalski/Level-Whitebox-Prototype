@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         CreateSingletonPattern();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void FixedUpdate()
