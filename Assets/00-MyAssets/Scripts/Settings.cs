@@ -20,6 +20,11 @@ public class Settings : MonoBehaviour
     public float mouseSensitivity = 1.0f;
     public bool invertYAxis = false;
 
+    private void Start()
+    {
+        SetResolution(resolutionWidth, resolutionHeight, isFullScreen);
+    }
+
     // Example method to change resolution
     public void SetResolution(int width, int height, bool fullScreen)
     {
