@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     public Flashlight flashlight;
     public TextMeshProUGUI useFlashlight;
 
+    public TextMeshProUGUI dialogueNameText;
+    public TextMeshProUGUI dialogueConversationText;
+
     //---------------------------------------------------
     // UNITY FUNCTIONS
     //---------------------------------------------------
