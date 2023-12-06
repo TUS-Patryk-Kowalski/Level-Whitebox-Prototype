@@ -16,7 +16,7 @@ public class DialogueSystemTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && Keyboard.current.eKey.wasPressedThisFrame)
         {
-            dialogueSystem.StartDialogue(dialogueSystem.);
+            // dialogueSystem.StartDialogue(dialogueSystem.);
         }
     }
 }
